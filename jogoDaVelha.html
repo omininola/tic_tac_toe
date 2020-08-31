@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" lang="pt-br" name="viewport" content="width=device-width">
+        <title>Jogo da velha</title>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="reset.css">
+        <link rel="stylesheet" href="jogoDaVelha.css">
+        <script type="text/javascript" src="jogoDaVelha.js"></script>
+    </head>
+    <body>
+        <div class="tudo">
+            <header class="cabecalho" id="cabeca">
+                <div id="cabecalho-div">
+                    <p id="quem">Vez de: X</p>
+                    <p id="quemUltimo"></p>
+                </div>
+            </header>
+            <main>
+                <div class="pagina">
+                    <div class="cores">
+                        <label for="corX">Cor do X: <input type="color" id="corX" class="cores-botos" value="#ff0000" onchange="mudarCorFundo()"></label>
+                        <label for="corO">Cor do O: <input type="color" id="corO" class="cores-botos" value="#0000ff" onchange="mudarCorFundo()"></label>
+                    </div>
+                    <div class="botos">
+                        <button onclick="qualJogador(1)" class="botos-itens" id="boto1"><p id="1">+</p></button>
+                        <button onclick="qualJogador(2)" class="botos-itens" id="boto2"><p id="2">+</p></button>
+                        <button onclick="qualJogador(3)" class="botos-itens" id="boto3"><p id="3">+</p></button>
+                        <button onclick="qualJogador(4)" class="botos-itens" id="boto4"><p id="4">+</p></button>
+                        <button onclick="qualJogador(5)" class="botos-itens" id="boto5"><p id="5">+</p></button>
+                        <button onclick="qualJogador(6)" class="botos-itens" id="boto6"><p id="6">+</p></button>
+                        <button onclick="qualJogador(7)" class="botos-itens" id="boto7"><p id="7">+</p></button>
+                        <button onclick="qualJogador(8)" class="botos-itens" id="boto8"><p id="8">+</p></button>
+                        <button onclick="qualJogador(9)" class="botos-itens" id="boto9"><p id="9">+</p></button>
+                    </div>
+                    <div class="reset">
+                        <p>Placar</p>
+                        <div class="placar">
+                            <ul>
+                                <li>X: </li>
+                                <li>O: </li>
+                                <li>Velha: </li>
+                            </ul>
+                            <ul>
+                                <li id="placarX">0</li>
+                                <li id="placarO">0</li>
+                                <li id="placarV">0</li>
+                            </ul>
+                        </div>
+                        <div class="reset-boto">
+                            <button onclick="reset()">Resetar</button>
+                            <button onclick="resetPlacar()">Resetar placar</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </body>
+</html>
