@@ -1,109 +1,161 @@
-jogador=true;
+// Initializing components
 
-jogadas = 0;
+let
+    first = true,
+    plays = 0,
+    player1 = 0,
+    player2 = 0,
+    velha = 0,
 
-player1 = 0;
-player2 = 0;
-velha = 0;
+    listOfSpots = [];
 
-foi1 = 0;
-foi2 = 0;
-foi3 = 0;
-foi4 = 0;
-foi5 = 0;
-foi6 = 0;
-foi7 = 0;
-foi8 = 0;
-foi9 = 0;
+function fillListOfSpots() {
+    for (let i = 1; i < 10; i++) {
+        listOfSpots.push(0);
+    }
+    return listOfSpots;
+}fillListOfSpots();
 
-function qualJogador(a){
-    (jogador)? clicar('x', a) : clicar('o', a);
-    jogadas++;
+// Methods
+
+function whitchPlayer(position){
+    if(first) player = 'x';
+    else player = 'o';
+    play(player, position-1);
+    first = !first;
+    plays++;
 }
 
-function clicar(letra, a){
-    quadrado = document.getElementById(a);
-    botao = document.getElementById('boto'+a);
-    quem = document.getElementById('quem');
-    corDoX = document.getElementById("corX").value;
-    corDoO = document.getElementById("corO").value;
-    if(letra=='x'){
-        quadrado.innerHTML='X';
-        quadrado.style.color='white';
-        botao.disabled = true;
-        botao.style.cursor="default";
-        botao.style.backgroundColor=corDoX;
-        quem.innerHTML="Vez de: O";
-        jogador=false;
-        verificar('x', a);
-    }
-    if(letra=='o'){
-        quadrado.innerHTML='O';
-        quadrado.style.color='white';
-        botao.disabled = true;
-        botao.style.cursor="default";
-        botao.style.backgroundColor=corDoO;
-        quem.innerHTML="Vez de: X";
-        jogador=true;
-        verificar('o', a);
+function play(player, position){
+    updateBoard(player, position);
+    check(player, position);
+}
+
+function updateBoard(player, position){
+    updateColors();
+    updateReferences(position+1);
+    updatePlay(player);
+}
+
+function updateColors(){
+    Xcolor = document.getElementById("corX").value;
+    Ocolor = document.getElementById("corO").value;    
+}
+
+function updateReferences(position){
+    square = document.getElementById(position);
+    button = document.getElementById('boto'+position);
+    who = document.getElementById('quem');
+}
+
+function updatePlay(player){
+    square.innerHTML=player.toUpperCase();
+    square.style.color='white';
+    button.disabled = true;
+    button.style.cursor="default";
+    if(player=='x') {
+        button.style.backgroundColor = Xcolor;
+        who.innerHTML="Vez de: O";
+    } else {
+        button.style.backgroundColor = Ocolor;
+        who.innerHTML="Vez de: X";
     }
 }
 
-function verificar(player, onde){
-    if(player=='x'){
-        switch(onde){
-            case 1: foi1=1; break;
-            case 2: foi2=1; break;
-            case 3: foi3=1; break;
-            case 4: foi4=1; break;
-            case 5: foi5=1; break;
-            case 6: foi6=1; break;
-            case 7: foi7=1; break;
-            case 8: foi8=1; break;
-            case 9: foi9=1; break;
+function check(player, position) {
+    markPlay(player, position);
+    var possibilities = checkAll()
+    if(possibilities==true) {
+        win(player);
+    }
+    if(possibilities=='velha') {
+        win('velha');
+    } 
+        
+}
+
+function markPlay(player, position){
+    mark = defineMark(player);
+    for (let i = 0; i < listOfSpots.length; i++) {
+        if(i==position) {
+            listOfSpots[i] = mark;
         }
     }
-    if(player=='o'){
-        switch(onde){
-            case 1: foi1=2; break;
-            case 2: foi2=2; break;
-            case 3: foi3=2; break;
-            case 4: foi4=2; break;
-            case 5: foi5=2; break;
-            case 6: foi6=2; break;
-            case 7: foi7=2; break;
-            case 8: foi8=2; break;
-            case 9: foi9=2; break;
+}
+
+function defineMark(player){
+    if(player=='x') {
+        return 1;
+    }
+    return 2;
+}
+
+function checkAll(){
+    // horizontal
+
+    for (let i = 0; i < 9; i+=3) {
+        test = (listOfSpots[i] == listOfSpots[i+1] && listOfSpots[i+1] == listOfSpots[i+2] && listOfSpots[i]!=0);
+        if(test) {
+            return true;
         }
     }
-    if(foi1==1 && foi2==1 && foi3==1 || foi4==1 && foi5==1 && foi6==1 || foi7==1 && foi8==1 && foi9==1 || 
-        foi1==1 && foi4==1 && foi7==1 || foi2==1 && foi5==1 && foi8==1 || foi3==1 && foi6==1 && foi9==1 ||
-        foi1==1 && foi5==1 && foi9==1 || foi3==1 && foi5==1 && foi7==1){
-            document.getElementById('quemUltimo').innerHTML="Ganhador(a) da última foi: X";
-            player1++;
-            alterarPlacar();
-            reset();
+
+    // vertical
+
+    for (let i = 0; i < 9; i++) {
+        test = (listOfSpots[i] == listOfSpots[i+3] && listOfSpots[i+3] == listOfSpots[i+6] && listOfSpots[i]!=0);
+        if(test) {
+            return true;
+        }
     }
-    else if(foi1==2 && foi2==2 && foi3==2 || foi4==2 && foi5==2 && foi6==2 || foi7==2 && foi8==2 && foi9==2 || 
-        foi1==2 && foi4==2 && foi7==2 || foi2==2 && foi5==2 && foi8==2 || foi3==2 && foi6==2 && foi9==2 ||
-        foi1==2 && foi5==2 && foi9==2 || foi3==2 && foi5==2 && foi7==2){
-            document.getElementById('quemUltimo').innerHTML="Ganhador(a) última foi: O";
-            player2++;
-            alterarPlacar();
-            reset();
+
+    // diagonal
+    let 
+        control1 = 0;
+        control2 = 8;
+        
+    for (let i = 0; i < 2; i++) {
+        test = (listOfSpots[control1] == listOfSpots[4] && listOfSpots[4] == listOfSpots[control2] && listOfSpots[control1]!=0);
+        control1 = 8;
+        control2 = 0;
+        if(test) {
+            return true;
+        }
     }
-    else if(jogadas==8){
-        document.getElementById('quemUltimo').innerHTML="Ganhadora da última foi: velha";
-        velha++;
-        alterarPlacar();
-        reset();
+
+    // velha 
+    if(plays==8) {
+        return 'velha';
     }
+}
+
+function win(player) {
+    document.getElementById('quemUltimo').innerHTML=`Ganhador(a) da última foi: ${player}`;
+    incrementScore(player);
+    updateScores();
+    reset('by win');
+}
+
+function incrementScore(player){
+    if(player=='x') player1++;
+    if(player=='o') player2++;
+    if(player=='velha') velha++;
+}
+
+function updateScores(){
+    document.getElementById('cabecalho-div').style.height="80px";
+    xScore = document.getElementById('placarX');
+    oScore = document.getElementById('placarO');
+    vScore = document.getElementById('placarV');
+    xScore.innerHTML=player1;
+    oScore.innerHTML=player2;
+    vScore.innerHTML=velha;
 }
 
 function reset(){
-    for(e = 1; e < 10; e++){
-        quadrado = document.getElementById(e);
-        botao = document.getElementById('boto'+e);
+    for(let i = 1; i < 10; i++){
+        quadrado = document.getElementById(i);
+        botao = document.getElementById('boto'+i);
         botao.style.cursor="pointer";
         quadrado.innerHTML="+";
         quadrado.style.color="black";
@@ -111,41 +163,23 @@ function reset(){
         botao.style.backgroundColor="rgb(239, 239, 239)";
     }
     document.getElementById('quem').innerHTML="Vez de: X";
-    jogador=true;
-    jogadas = 0;
-    foi1 = 0;
-    foi2 = 0;
-    foi3 = 0;
-    foi4 = 0;
-    foi5 = 0;
-    foi6 = 0;
-    foi7 = 0;
-    foi8 = 0;
-    foi9 = 0;
+    first = true;
+    plays = 0;
+    listOfSpots = [];
+    fillListOfSpots();
 }
 
-function mudarCorFundo(){
-    corDoX = document.getElementById('corX').value;
-    corDoO = document.getElementById('corO').value;
-    cabecalho = document.getElementById('cabeca');
-    cabecalho.style.backgroundImage="linear-gradient(45deg, "+corDoX+", "+corDoO+")";
+function changeBackgroundColor(){
+    updateColors()
+    header = document.getElementById('cabeca');
+    header.style.backgroundImage=`linear-gradient(45deg, ${Xcolor}, ${Ocolor})`;
 }
 
-function alterarPlacar(){
-    document.getElementById('cabecalho-div').style.height="80px";
-    x = document.getElementById('placarX');
-    o = document.getElementById('placarO');
-    v = document.getElementById('placarV');
-    x.innerHTML=player1;
-    o.innerHTML=player2;
-    v.innerHTML=velha;
-}
-
-function resetPlacar(){
+function resetScores(){
     document.getElementById('quemUltimo').innerHTML="";
     player1 = 0;
     player2 = 0;
     velha = 0;
-    alterarPlacar();
+    updateScores();
     reset();
 }
