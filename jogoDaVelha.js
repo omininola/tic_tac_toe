@@ -2,100 +2,97 @@
 
 let
     first = true,
-    plays = 0,
     player1 = 0,
     player2 = 0,
     velha = 0,
 
-    listOfSpots = [];
-
-function fillListOfSpots() {
+    listOfSpots = [],
+function fillLists() {
     for (let i = 1; i < 10; i++) {
         listOfSpots.push(0);
     }
     return listOfSpots;
-}fillListOfSpots();
+} fillLists();
 
 // Methods
 
-function whitchPlayer(position){
-    if(first) player = 'x';
+function whitchPlayer(position) {
+    if (first) player = 'x';
     else player = 'o';
-    play(player, position-1);
+    play(player, position - 1);
     first = !first;
-    plays++;
 }
 
-function play(player, position){
+function play(player, position) {
     updateBoard(player, position);
     check(player, position);
 }
 
-function updateBoard(player, position){
+function updateBoard(player, position) {
     updateColors();
-    updateReferences(position+1);
+    updateReferences(position + 1);
     updatePlay(player);
 }
 
-function updateColors(){
+function updateColors() {
     Xcolor = document.getElementById("corX").value;
-    Ocolor = document.getElementById("corO").value;    
+    Ocolor = document.getElementById("corO").value;
 }
 
-function updateReferences(position){
+function updateReferences(position) {
     square = document.getElementById(position);
-    button = document.getElementById('boto'+position);
+    button = document.getElementById('boto' + position);
     who = document.getElementById('quem');
 }
 
-function updatePlay(player){
-    square.innerHTML=player.toUpperCase();
-    square.style.color='white';
+function updatePlay(player) {
+    square.innerHTML = player.toUpperCase();
+    square.style.color = 'white';
     button.disabled = true;
-    button.style.cursor="default";
-    if(player=='x') {
+    button.style.cursor = "default";
+    if (player == 'x') {
         button.style.backgroundColor = Xcolor;
-        who.innerHTML="Vez de: O";
+        who.innerHTML = "Vez de: O";
     } else {
         button.style.backgroundColor = Ocolor;
-        who.innerHTML="Vez de: X";
+        who.innerHTML = "Vez de: X";
     }
 }
 
 function check(player, position) {
     markPlay(player, position);
     var possibilities = checkAll()
-    if(possibilities==true) {
+    if (possibilities == true) {
         win(player);
     }
-    if(possibilities=='velha') {
+    if (possibilities == 'velha') {
         win('velha');
-    } 
-        
+    }
+
 }
 
-function markPlay(player, position){
+function markPlay(player, position) {
     mark = defineMark(player);
     for (let i = 0; i < listOfSpots.length; i++) {
-        if(i==position) {
+        if (i == position) {
             listOfSpots[i] = mark;
         }
     }
 }
 
-function defineMark(player){
-    if(player=='x') {
+function defineMark(player) {
+    if (player == 'x') {
         return 1;
     }
     return 2;
 }
 
-function checkAll(){
+function checkAll() {
     // horizontal
 
-    for (let i = 0; i < 9; i+=3) {
-        test = (listOfSpots[i] == listOfSpots[i+1] && listOfSpots[i+1] == listOfSpots[i+2] && listOfSpots[i]!=0);
-        if(test) {
+    for (let i = 0; i < 9; i += 3) {
+        test = (listOfSpots[i] == listOfSpots[i + 1] && listOfSpots[i + 1] == listOfSpots[i + 2] && listOfSpots[i] != 0);
+        if (test) {
             return true;
         }
     }
@@ -103,83 +100,85 @@ function checkAll(){
     // vertical
 
     for (let i = 0; i < 9; i++) {
-        test = (listOfSpots[i] == listOfSpots[i+3] && listOfSpots[i+3] == listOfSpots[i+6] && listOfSpots[i]!=0);
-        if(test) {
+        test = (listOfSpots[i] == listOfSpots[i + 3] && listOfSpots[i + 3] == listOfSpots[i + 6] && listOfSpots[i] != 0);
+        if (test) {
             return true;
         }
     }
 
     // diagonal
-    let 
+    let
         control1 = 0;
         control2 = 8;
-        
+
     for (let i = 0; i < 2; i++) {
-        test = (listOfSpots[control1] == listOfSpots[4] && listOfSpots[4] == listOfSpots[control2] && listOfSpots[control1]!=0);
-        control1 = 8;
-        control2 = 0;
-        if(test) {
+        test = (listOfSpots[control1] == listOfSpots[4] && listOfSpots[4] == listOfSpots[control2] && listOfSpots[control1] != 0);
+        control1 += 2;
+        control2 -= 2;
+        if (test) {
             return true;
         }
     }
 
     // velha 
-    if(plays==8) {
+    if (!listOfSpots.includes(0)) {
         return 'velha';
     }
 }
 
 function win(player) {
-    document.getElementById('quemUltimo').innerHTML=`Ganhador(a) da última foi: ${player}`;
+    document.getElementById('quemUltimo').innerHTML = `Ganhador(a) da última foi: ${player}`;
     incrementScore(player);
     updateScores();
-    reset('by win');
+    reset();
 }
 
-function incrementScore(player){
-    if(player=='x') player1++;
-    if(player=='o') player2++;
-    if(player=='velha') velha++;
+function incrementScore(player) {
+    if (player == 'x') player1++;
+    if (player == 'o') player2++;
+    if (player == 'velha') velha++;
 }
 
-function updateScores(){
-    document.getElementById('cabecalho-div').style.height="80px";
+function updateScores() {
+    document.getElementById('cabecalho-div').style.height = "80px";
     xScore = document.getElementById('placarX');
     oScore = document.getElementById('placarO');
     vScore = document.getElementById('placarV');
-    xScore.innerHTML=player1;
-    oScore.innerHTML=player2;
-    vScore.innerHTML=velha;
+    xScore.innerHTML = player1;
+    oScore.innerHTML = player2;
+    vScore.innerHTML = velha;
 }
 
-function reset(){
-    for(let i = 1; i < 10; i++){
-        quadrado = document.getElementById(i);
-        botao = document.getElementById('boto'+i);
-        botao.style.cursor="pointer";
-        quadrado.innerHTML="+";
-        quadrado.style.color="black";
-        botao.disabled=false;
-        botao.style.backgroundColor="rgb(239, 239, 239)";
+function reset() {
+    for (let i = 1; i < 10; i++) {
+        updateReferences(i);
+        resetBoard();
     }
-    document.getElementById('quem').innerHTML="Vez de: X";
+    who.innerHTML = "Vez de: X";
     first = true;
-    plays = 0;
     listOfSpots = [];
-    fillListOfSpots();
+    fillLists();
 }
 
-function changeBackgroundColor(){
+function changeBackgroundColor() {
     updateColors()
     header = document.getElementById('cabeca');
-    header.style.backgroundImage=`linear-gradient(45deg, ${Xcolor}, ${Ocolor})`;
+    header.style.backgroundImage = `linear-gradient(45deg, ${Xcolor}, ${Ocolor})`;
 }
 
-function resetScores(){
-    document.getElementById('quemUltimo').innerHTML="";
+function resetScores() {
+    document.getElementById('quemUltimo').innerHTML = "";
     player1 = 0;
     player2 = 0;
     velha = 0;
     updateScores();
     reset();
+}
+
+function resetBoard() {
+    button.style.cursor = "pointer";
+    square.innerHTML = "+";
+    square.style.color = "black";
+    button.disabled = false;
+    button.style.backgroundColor = "rgb(239, 239, 239)";
 }
