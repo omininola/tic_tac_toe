@@ -1,12 +1,10 @@
 // Initializing components
+let first = true;
+let player1 = 0;
+let player2 = 0;
+let velha = 0;
+let listOfSpots = [];
 
-let
-    first = true,
-    player1 = 0,
-    player2 = 0,
-    velha = 0,
-
-    listOfSpots = [],
 function fillLists() {
     for (let i = 1; i < 10; i++) {
         listOfSpots.push(0);
@@ -15,8 +13,8 @@ function fillLists() {
 } fillLists();
 
 // Methods
-
 function whitchPlayer(position) {
+    let player;
     if (first) player = 'x';
     else player = 'o';
     play(player, position - 1);
@@ -50,7 +48,7 @@ function updatePlay(player) {
     square.style.color = 'white';
     button.disabled = true;
     button.style.cursor = "default";
-    if (player == 'x') {
+    if (player === 'x') {
         button.style.backgroundColor = Xcolor;
         who.innerHTML = "Vez de: O";
     } else {
@@ -61,11 +59,11 @@ function updatePlay(player) {
 
 function check(player, position) {
     markPlay(player, position);
-    var possibilities = checkAll()
-    if (possibilities == true) {
+    let possibilities = checkAll()
+    if (possibilities === true) {
         win(player);
     }
-    if (possibilities == 'velha') {
+    if (possibilities === 'velha') {
         win('velha');
     }
 
@@ -74,7 +72,7 @@ function check(player, position) {
 function markPlay(player, position) {
     mark = defineMark(player);
     for (let i = 0; i < listOfSpots.length; i++) {
-        if (i == position) {
+        if (i === position) {
             listOfSpots[i] = mark;
         }
     }
@@ -88,39 +86,36 @@ function defineMark(player) {
 }
 
 function checkAll() {
-    // horizontal
-
+    // Horizontal
     for (let i = 0; i < 9; i += 3) {
-        test = (listOfSpots[i] == listOfSpots[i + 1] && listOfSpots[i + 1] == listOfSpots[i + 2] && listOfSpots[i] != 0);
-        if (test) {
+        result = (listOfSpots[i] == listOfSpots[i + 1] && listOfSpots[i + 1] == listOfSpots[i + 2] && listOfSpots[i] != 0);
+        if (result) {
             return true;
         }
     }
 
-    // vertical
-
+    // Vertical
     for (let i = 0; i < 9; i++) {
-        test = (listOfSpots[i] == listOfSpots[i + 3] && listOfSpots[i + 3] == listOfSpots[i + 6] && listOfSpots[i] != 0);
-        if (test) {
+        result = (listOfSpots[i] == listOfSpots[i + 3] && listOfSpots[i + 3] == listOfSpots[i + 6] && listOfSpots[i] != 0);
+        if (result) {
             return true;
         }
     }
 
-    // diagonal
-    let
-        control1 = 0;
-        control2 = 8;
+    // Diagonal
+    let control1 = 0;
+    let control2 = 8;
 
     for (let i = 0; i < 2; i++) {
-        test = (listOfSpots[control1] == listOfSpots[4] && listOfSpots[4] == listOfSpots[control2] && listOfSpots[control1] != 0);
+        result = (listOfSpots[control1] == listOfSpots[4] && listOfSpots[4] == listOfSpots[control2] && listOfSpots[control1] != 0);
         control1 += 2;
         control2 -= 2;
-        if (test) {
+        if (result) {
             return true;
         }
     }
 
-    // velha 
+    // Velha 
     if (!listOfSpots.includes(0)) {
         return 'velha';
     }
